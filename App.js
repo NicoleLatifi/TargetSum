@@ -5,7 +5,7 @@ import Game from './src/components/Game';
 class App extends Component {
   render() {
     return (
-      <Game />
+      <Game randomNumberCount={6}/>
     );
   }
 }

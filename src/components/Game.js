@@ -1,29 +1,59 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-const Game = () => {
-  const target = 10 + Math.floor(40 * Math.random())
+const Game = ({randomNumberCount}) => {
+  const randomNumbers = Array
+    .from({ length: randomNumberCount })
+    .map(() => 1 + Math.floor(10 * Math.random()));
 
+  const target = randomNumbers
+    .slice(0, randomNumberCount - 2)
+    .reduce((acc, curr) => acc + curr, 0);
+// TODO: shuffle the random numbers
   return (
     <View style={styles.container}>
       <Text style={styles.target}>{target}</Text>
+      <View style={styles.randomContainer}>
+        {randomNumbers.map((randomNumber, i) => {
+          return <Text key={i} style={styles.random}>{randomNumber}</Text>
+        })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ddd',
+    backgroundColor: "#ddd",
     flex: 1,
     paddingTop: 100,
   },
   target: {
-    backgroundColor: '#aaa',
+    backgroundColor: "#aaa",
     fontSize: 40,
     marginHorizontal: 50,
-    textAlign: 'center',
-  }
-})
+    textAlign: "center",
+  },
+  randomContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+  },
+  random: {
+    backgroundColor: "#999",
+    fontSize: 40,
+    marginHorizontal: 20,
+    marginTop: 50,
+    textAlign: "center",
+    width: 100,
+  },
+});
 
 export default Game;
+
+Game.PropTypes = {
+  randomNumberCount: PropTypes.number.isRequired,
+}
