@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet,  View} from 'react-native';
+import { StyleSheet} from 'react-native';
+import Game from './src/components/Game';
 
 class App extends Component {
   render() {
     return (
-      <View style={StyleSheet.container}/>
+      <Game />
     );
   }
 }
