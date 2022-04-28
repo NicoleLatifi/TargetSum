@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { StyleSheet} from 'react-native';
+import React from 'react';
 import Game from './src/components/Game';
 
-class App extends Component {
-  render() {
-    return (
-      <Game randomNumberCount={6}/>
-    );
-  }
-}
+const App = () => {
+  const randomNumbers = Array
+    .from({ length: 6 })
+    .map(() => 1 + Math.floor(10 * Math.random()));
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ddd',
-    flex: 1,
-  }
-});
+  const target = randomNumbers
+    .slice(0, 6 - 2)
+    .reduce((acc, curr) => acc + curr, 0);
+  // TODO: shuffle the random numbers
+
+  return (
+    <Game randomNumbers={randomNumbers} target={target} />
+  );
+}
 
 export default App;

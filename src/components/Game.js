@@ -1,29 +1,40 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, Text, View } from "react-native";
 
-import RandomNumber from './RandomNumber'
+import RandomNumber from "./RandomNumber";
 
-const Game = ({randomNumberCount}) => {
-  const randomNumbers = Array
-    .from({ length: randomNumberCount })
-    .map(() => 1 + Math.floor(10 * Math.random()));
+const Game = ({ randomNumbers, target }) => {
+  const [selectedIndices, setSelectedIndices] = useState([]);
 
-  const target = randomNumbers
-    .slice(0, randomNumberCount - 2)
-    .reduce((acc, curr) => acc + curr, 0);
-// TODO: shuffle the random numbers
+  const isNumberSelected = (numberIndex) => {
+    return selectedIndices.indexOf(numberIndex) >= 0;
+  };
+
+  const selectNumber = (numberIndex) => {
+    setSelectedIndices((prevIndices) => [...prevIndices, numberIndex]);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.target}>{target}</Text>
       <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, i) => {
-          return <RandomNumber key={i} number={randomNumber} />
+          return (
+            <RandomNumber
+              id={i}
+              isDisabled={isNumberSelected(i)}
+              key={i}
+              number={randomNumber}
+              selectedIndices={selectedIndices}
+              onPress={selectNumber}
+            />
+          );
         })}
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +58,7 @@ const styles = StyleSheet.create({
 
 export default Game;
 
-Game.PropTypes = {
-  randomNumberCount: PropTypes.number.isRequired,
-}
+Game.propTypes = {
+  randomNumbers: PropTypes.array.isRequired,
+  target: PropTypes.number.isRequired,
+};
