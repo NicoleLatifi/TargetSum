@@ -15,15 +15,37 @@ const Game = ({ randomNumbers, target }) => {
     setSelectedIndices((prevIndices) => [...prevIndices, numberIndex]);
   };
 
+  const determineGameStatus = () => {
+    const sumSelected = selectedIndices.reduce((acc, curr) => {
+      return acc + randomNumbers[curr];
+    }, 0);
+    
+    if (sumSelected < target) {
+      return 'PLAYING';
+    }
+    if (sumSelected === target) {
+      return 'WON';
+    }
+    if (sumSelected > target) {
+      return 'LOST';
+    }
+  }
+
+  const gameStatus = determineGameStatus();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.target}>{target}</Text>
+      <Text style={[styles.target, styles[`STATUS_${gameStatus}`]]}>
+        {target}
+      </Text>
       <View style={styles.randomContainer}>
         {randomNumbers.map((randomNumber, i) => {
           return (
             <RandomNumber
               id={i}
-              isDisabled={isNumberSelected(i)}
+              isDisabled={
+                isNumberSelected(i) || gameStatus !== 'PLAYING'
+              }
               key={i}
               number={randomNumber}
               selectedIndices={selectedIndices}
@@ -32,6 +54,7 @@ const Game = ({ randomNumbers, target }) => {
           );
         })}
       </View>
+      <Text>{gameStatus}</Text>
     </View>
   );
 };
@@ -40,10 +63,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ddd",
     flex: 1,
-    paddingTop: 100,
+    paddingVertical: 100,
   },
   target: {
-    backgroundColor: "#aaa",
     fontSize: 40,
     marginHorizontal: 50,
     textAlign: "center",
@@ -53,6 +75,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
+  },
+  STATUS_PLAYING: {
+    backgroundColor: "#aaa",
+  },
+  STATUS_WON: {
+    backgroundColor: "green",
+  },
+  STATUS_LOST: {
+    backgroundColor: "red",
   },
 });
 
